@@ -3,109 +3,144 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIELD | Advanced Intelligence Interface</title>
-    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>SHIELD PRE-ALPHA | ADVANCED INTERFACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="bg-scanlines"></div>
+    <div class="ambient-glow"></div>
+    <div class="noise-overlay"></div>
+    <div class="grid-lines"></div>
 
-    <div class="dashboard-shell">
-        <aside class="glass-sidebar">
-            <div class="brand-zone">
-                <div class="shield-hexagon">
-                    <span>S</span>
+    <div class="main-shell">
+        <aside class="sidebar-v2">
+            <div class="logo-area">
+                <div class="logo-spinner">
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <div class="ring"></div>
+                    <span class="shield-char">S</span>
                 </div>
-                <h2 class="glitch" data-text="SHIELD">SHIELD</h2>
+                <div class="logo-brand">
+                    <h1 class="glitch-text" data-text="SHIELD">SHIELD</h1>
+                    <div class="system-tag">STRATEGIC INTERVENTION DIVISION</div>
+                </div>
             </div>
-            
-            <nav class="hyper-nav">
-                <div class="nav-indicator"></div>
-                <button onclick="switchPage('home-page')" class="nav-item active" data-index="0">
-                    <span class="nav-hex"></span> DASHBOARD
+
+            <nav class="nav-controller">
+                <button onclick="switchPage('home-page')" class="nav-link active">
+                    <span class="corner-tl"></span><span class="corner-br"></span>
+                    <span class="label">CORE_DASHBOARD</span>
                 </button>
-                <button onclick="switchPage('missions-page')" class="nav-item" data-index="1">
-                    <span class="nav-hex"></span> MISSÕES
+                <button onclick="switchPage('missions-page')" class="nav-link">
+                    <span class="corner-tl"></span><span class="corner-br"></span>
+                    <span class="label">ACTIVE_OPERATIONS</span>
                 </button>
-                <button onclick="switchPage('docs-page')" class="nav-item" data-index="2">
-                    <span class="nav-hex"></span> ARQUIVOS
+                <button onclick="switchPage('docs-page')" class="nav-link">
+                    <span class="corner-tl"></span><span class="corner-br"></span>
+                    <span class="label">ENCRYPTED_FILES</span>
                 </button>
-                <button onclick="switchPage('agents-page')" class="nav-item" data-index="3">
-                    <span class="nav-hex"></span> AGENTES
+                <button onclick="switchPage('agents-page')" class="nav-link">
+                    <span class="corner-tl"></span><span class="corner-br"></span>
+                    <span class="label">AGENT_ROSTER</span>
                 </button>
             </nav>
 
-            <div class="system-monitor">
-                <div class="cpu-load">
-                    <div class="load-bar"></div>
+            <div class="terminal-footer">
+                <div class="connection-status">
+                    <div class="dot pulse"></div>
+                    <span>UPLINK_ESTABLISHED</span>
                 </div>
-                <small>SYSTEM UPTIME: 99.9%</small>
+                <div class="encryption-key">RSA_4096: AES-256</div>
             </div>
         </aside>
 
-        <main class="viewport">
+        <main class="workspace">
             <div id="home-page" class="page active">
-                <div class="view-header">
-                    <h1>SISTEMA DE MONITORAMENTO <span class="pulse">●</span></h1>
-                    <div class="data-clock" id="live-clock">00:00:00</div>
-                </div>
-                
-                <div class="hero-stats">
-                    <div class="data-card animate-in">
-                        <div class="card-glow"></div>
-                        <label>OPERATIONS</label>
-                        <h2 id="count-missions">0</h2>
-                        <div class="card-line"></div>
+                <header class="view-intro">
+                    <div class="view-tag">SYSTEM_OVERVIEW_V4.0</div>
+                    <h2 class="view-title">OPERATIONAL INTELLIGENCE</h2>
+                </header>
+
+                <div class="stats-matrix">
+                    <div class="stat-card-v2">
+                        <div class="card-bg-fx"></div>
+                        <div class="stat-info">
+                            <label>TOTAL_OPS</label>
+                            <span class="stat-value" id="count-missions">0</span>
+                        </div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: 75%"></div></div>
                     </div>
-                    <div class="data-card animate-in" style="animation-delay: 0.1s">
-                        <div class="card-glow"></div>
-                        <label>DATABASE</label>
-                        <h2 id="count-docs">0</h2>
-                        <div class="card-line"></div>
+                    <div class="stat-card-v2">
+                        <div class="card-bg-fx"></div>
+                        <div class="stat-info">
+                            <label>DATA_BLOCKS</label>
+                            <span class="stat-value" id="count-docs">0</span>
+                        </div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: 45%"></div></div>
                     </div>
-                    <div class="data-card animate-in" style="animation-delay: 0.2s">
-                        <div class="card-glow"></div>
-                        <label>PERSONNEL</label>
-                        <h2 id="count-agents">0</h2>
-                        <div class="card-line"></div>
+                    <div class="stat-card-v2">
+                        <div class="card-bg-fx"></div>
+                        <div class="stat-info">
+                            <label>PERSONNEL</label>
+                            <span class="stat-value" id="count-agents">0</span>
+                        </div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: 92%"></div></div>
                     </div>
                 </div>
             </div>
 
             <div id="missions-page" class="page">
-                <div class="view-header">
-                    <h1>CENTRAL DE OPERAÇÕES</h1>
-                    <button class="btn-neo" onclick="openModal('mission-modal')">NEW_ENTRY_</button>
+                <div class="page-header-v2">
+                    <h2>MISSION_CONTROL</h2>
+                    <button class="btn-tech-plus" onclick="openModal('mission-modal')">
+                        <span class="plus-icon">+</span> INJECT_NEW_DATA
+                    </button>
                 </div>
-                <div id="missions-container" class="complex-grid"></div>
+                <div id="missions-container" class="tech-grid"></div>
             </div>
 
-            <div id="docs-page" class="page"><div id="docs-container" class="complex-grid"></div></div>
-            <div id="agents-page" class="page"><div id="agents-container" class="complex-grid"></div></div>
+            <div id="docs-page" class="page">
+                <div class="page-header-v2">
+                    <h2>SECURE_STORAGE</h2>
+                    <button class="btn-tech-plus" onclick="openModal('doc-modal')">ARCHIVE_DOC</button>
+                </div>
+                <div id="docs-container" class="tech-grid"></div>
+            </div>
+
+            <div id="agents-page" class="page">
+                <div class="page-header-v2">
+                    <h2>AGENT_DATABASE</h2>
+                    <button class="btn-tech-plus" onclick="openModal('agent-modal')">RECRUIT_AGENT</button>
+                </div>
+                <div id="agents-container" class="tech-grid"></div>
+            </div>
         </main>
     </div>
 
-    <div id="mission-modal" class="modal-overlay">
-        <div class="modal-glass">
-            <div class="modal-header">
-                <h3>REGISTRAR NOVA MISSÃO</h3>
-                <span class="close-btn" onclick="closeModal('mission-modal')">&times;</span>
+    <div id="mission-modal" class="modal-v2">
+        <div class="modal-v2-container">
+            <div class="modal-v2-header">
+                <h3>// MISSION_DATA_INPUT</h3>
+                <button class="btn-close-v2" onclick="closeModal('mission-modal')">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="input-group">
-                    <input type="text" id="m-title" required>
-                    <label>CODINOME DA MISSÃO</label>
+            <div class="modal-v2-body">
+                <div class="tech-input-group">
+                    <input type="text" id="m-title" required placeholder=" ">
+                    <label>MISSION_CODENAME</label>
                 </div>
-                <div class="input-group">
-                    <textarea id="m-desc" required></textarea>
-                    <label>DETALHES TÉCNICOS</label>
+                <div class="tech-input-group">
+                    <textarea id="m-desc" required placeholder=" "></textarea>
+                    <label>OBJECTIVE_SPECIFICATIONS</label>
                 </div>
-                <select id="m-status" class="neo-select">
-                    <option value="andamento">OPERANTE</option>
-                    <option value="concluida">SUCESSO</option>
-                    <option value="fracassada">FALHA</option>
-                </select>
-                <button class="btn-confirm" onclick="saveMission()">ENVIAR PARA O MAINFRAME</button>
+                <div class="tech-input-group">
+                    <select id="m-status">
+                        <option value="andamento">OPERATIONAL</option>
+                        <option value="concluida">SUCCESS</option>
+                        <option value="fracassada">FAILED</option>
+                    </select>
+                </div>
+                <button class="btn-submit-tech" onclick="saveMission()">UPLINK_TO_CLOUD</button>
             </div>
         </div>
     </div>
