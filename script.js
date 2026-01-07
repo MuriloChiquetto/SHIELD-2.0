@@ -10,7 +10,7 @@ const firebaseConfig = {
     appId: "1:1041018025450:web:a03a48413628a5f3e96e93"
 };
 
-// Inicialização segura
+// Inicialização
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
@@ -20,7 +20,7 @@ const db = firebase.firestore();
 document.addEventListener('DOMContentLoaded', () => {
     const intro = document.getElementById('intro-overlay');
     
-    // Forçar saída da tela de carregamento após 3 segundos
+    // Forçar saída da tela de carregamento (3 segundos)
     setTimeout(() => {
         if (intro) {
             intro.style.transition = 'opacity 1s ease';
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, 3000);
 
-    // Iniciar Sincronização de Dados e Contadores
+    // Iniciar Sincronização e Contadores
     const collections = ['missions', 'docs', 'agents', 'finance', 'armory'];
     collections.forEach(c => {
         startSync(c);
@@ -37,18 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Função para atualizar os números na Home automaticamente
+// Função para atualizar os números na Home (Filtra registros vazios)
 function updateCounter(collectionName) {
     db.collection(collectionName).onSnapshot(snapshot => {
-        const count = snapshot.size;
-        // Procura IDs: count-missions, count-agents, count-docs
+        const validDocs = snapshot.docs.filter(doc => {
+            const data = doc.data();
+            if (collectionName === 'agents') return data.name && data.name.trim() !== "";
+            if (collectionName === 'missions') return data.title && data.title.trim() !== "";
+            if (collectionName === 'docs') return data.title && data.title.trim() !== "";
+            return true;
+        });
         const element = document.getElementById(`count-${collectionName}`);
-        if (element) element.innerText = count;
+        if (element) element.innerText = validDocs.length;
     });
 }
 
 // ==========================================================================
-// 3. MOTOR DE DADOS (FIREBASE)
+// 3. MOTOR DE DADOS
 // ==========================================================================
 
 function startSync(collectionName) {
@@ -67,7 +72,7 @@ async function saveData(collection, data) {
         });
     } catch (e) {
         console.error("Erro ao salvar:", e);
-        alert("Erro: Verifique se as REGRAS do Firebase estão públicas.");
+        alert("Erro: Verifique as REGRAS do Firebase (allow read, write: if true;)");
     }
 }
 
@@ -76,19 +81,19 @@ async function updateMissionStatus(missionId, newStatus) {
 }
 
 async function deleteRemote(collection, id) {
-    if(confirm("Deseja eliminar este registro para todos os agentes?")) {
+    if(confirm("Eliminar este registro para todos os agentes?")) {
         await db.collection(collection).doc(id).delete();
     }
 }
 
 // ==========================================================================
-// 4. FUNÇÕES DE INTERAÇÃO (BOTOES)
+// 4. FUNÇÕES DE SALVAMENTO (BOTOES)
 // ==========================================================================
 
 function saveMission() {
     const title = document.getElementById('m-title').value;
     const desc = document.getElementById('m-desc').value;
-    const status = document.getElementById('m-status') ? document.getElementById('m-status').value : 'em_andamento';
+    const status = document.getElementById('m-status') ? document.getElementById('m-status').value : 'andamento';
     if (!title) return;
     saveData('missions', { title, desc, status });
     closeModal('mission-modal');
@@ -102,6 +107,8 @@ function saveDoc() {
     if (!title) return;
     saveData('docs', { title, desc });
     closeModal('doc-modal');
+    document.getElementById('d-title').value = '';
+    document.getElementById('d-desc').value = '';
 }
 
 function saveAgent() {
@@ -116,39 +123,19 @@ function saveAgent() {
     reader.readAsDataURL(file);
 }
 
-function saveFinance() {
-    const amount = parseFloat(document.getElementById('f-amount').value);
-    const desc = document.getElementById('f-desc').value;
-    if (isNaN(amount)) return;
-    saveData('finance', { amount, desc });
-    closeModal('finance-modal');
-}
-
-function saveArmory() {
-    const type = document.getElementById('a-type').value;
-    const model = document.getElementById('a-model').value;
-    const produced = parseInt(document.getElementById('a-produced').value) || 0;
-    const sold = parseInt(document.getElementById('a-sold').value) || 0;
-    if (!model) return;
-    saveData('armory', { type, model, produced, sold });
-    closeModal('armory-modal');
-}
-
 // ==========================================================================
 // 5. RENDERIZAÇÃO DA INTERFACE
 // ==========================================================================
 
 function renderContent(collection, data) {
-    // MISSÕES COM STATUS E BOTÕES
+    // MISSÕES
     if (collection === 'missions') {
         const cont = document.getElementById('missions-container');
         if(cont) cont.innerHTML = data.map(m => {
-            let color = "#aaa"; 
-            if(m.status === 'concluida') color = "#00ff00";
-            if(m.status === 'fracassada') color = "#ff4444";
+            let color = m.status === 'concluida' ? "#00ff00" : (m.status === 'fracassada' ? "#ff4444" : "#aaa");
             return `
             <div class="card" style="border-left: 5px solid ${color}">
-                <small style="color:${color}; font-weight:bold;">${(m.status || 'em andamento').toUpperCase()}</small>
+                <small style="color:${color}; font-weight:bold;">${(m.status || 'andamento').toUpperCase()}</small>
                 <h3>${m.title}</h3>
                 <p>${m.desc}</p>
                 <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
@@ -160,47 +147,31 @@ function renderContent(collection, data) {
         }).join('');
     }
 
-    // AGENTES (Foto 400px)
+    // DOCUMENTOS (Corrigido para aparecer na tela)
+    if (collection === 'docs') {
+        const cont = document.getElementById('docs-container');
+        if(cont) cont.innerHTML = data.map(d => `
+        <div class="card" style="border-top: 2px solid #555;">
+            <small style="color:#888;">DOCUMENTO OFICIAL</small>
+            <h3>${d.title}</h3>
+            <p style="white-space: pre-wrap; font-size: 0.9rem; color: #ccc;">${d.desc}</p>
+            <button class="btn-delete" style="width:100%; margin-top:15px;" onclick="deleteRemote('docs', '${d.id}')">ELIMINAR ARQUIVO</button>
+        </div>`).join('');
+    }
+
+    // AGENTES
     if (collection === 'agents') {
         const cont = document.getElementById('agents-container');
         if(cont) cont.innerHTML = data.map(a => `
         <div class="card agent-card">
-            <img src="${a.image}" style="width:100%; height:400px; object-fit:contain; background:#000; margin-bottom:15px; border:1px solid #222;">
+            <img src="${a.image}" style="width:100%; height:400px; object-fit:contain; background:#000; margin-bottom:15px;">
             <h3>${a.name}</h3>
             <button class="btn-delete" onclick="deleteRemote('agents', '${a.id}')">REMOVER</button>
         </div>`).join('');
     }
-
-    // FINANCEIRO
-    if (collection === 'finance') {
-        const bal = data.reduce((acc, curr) => acc + curr.amount, 0);
-        if(document.getElementById('total-balance')) document.getElementById('total-balance').innerText = `$ ${bal.toLocaleString()}`;
-        const cont = document.getElementById('finance-container');
-        if(cont) cont.innerHTML = data.map(f => `
-        <div class="card" style="border-left: 4px solid ${f.amount >= 0 ? '#00ff00' : '#ff0000'}">
-            <h3>${f.amount >= 0 ? '+' : ''}${f.amount}</h3>
-            <p>${f.desc}</p>
-            <button class="btn-delete" onclick="deleteRemote('finance', '${f.id}')">APAGAR</button>
-        </div>`).join('');
-    }
-
-    // ARSENAL
-    if (collection === 'armory') {
-        const weapons = data.filter(i => i.type === 'arma');
-        const ammo = data.filter(i => i.type === 'municao');
-        const cardHTML = (item) => `
-            <div class="card">
-                <small>${item.type.toUpperCase()}</small>
-                <h3>${item.model}</h3>
-                <p>ESTOQUE: ${item.produced - item.sold}</p>
-                <button class="btn-delete" style="width:100%" onclick="deleteRemote('armory', '${item.id}')">REMOVER</button>
-            </div>`;
-        if(document.getElementById('weapons-container')) document.getElementById('weapons-container').innerHTML = weapons.map(cardHTML).join('');
-        if(document.getElementById('ammo-container')) document.getElementById('ammo-container').innerHTML = ammo.map(cardHTML).join('');
-    }
 }
 
-// NAVEGAÇÃO E MODAIS
+// NAVEGAÇÃO
 function switchPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
