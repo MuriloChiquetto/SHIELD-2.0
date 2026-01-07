@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIELD PRE-ALPHA | ADVANCED INTERFACE</title>
+    <title>SISTEMA SHIELD | COMANDO CENTRAL</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -23,95 +23,90 @@
                 </div>
                 <div class="logo-brand">
                     <h1 class="glitch-text" data-text="SHIELD">SHIELD</h1>
-                    <div class="system-tag">STRATEGIC INTERVENTION DIVISION</div>
+                    <div class="system-tag">DIVISÃO DE INTERVENÇÃO ESTRATÉGICA</div>
                 </div>
             </div>
 
             <nav class="nav-controller">
                 <button onclick="switchPage('home-page')" class="nav-link active">
                     <span class="corner-tl"></span><span class="corner-br"></span>
-                    <span class="label">CORE_DASHBOARD</span>
+                    <span class="label">PAINEL_CENTRAL</span>
                 </button>
                 <button onclick="switchPage('missions-page')" class="nav-link">
                     <span class="corner-tl"></span><span class="corner-br"></span>
-                    <span class="label">ACTIVE_OPERATIONS</span>
+                    <span class="label">OPERACOES_ATIVAS</span>
                 </button>
                 <button onclick="switchPage('docs-page')" class="nav-link">
                     <span class="corner-tl"></span><span class="corner-br"></span>
-                    <span class="label">ENCRYPTED_FILES</span>
+                    <span class="label">ARQUIVOS_CRIPTOGRAFADOS</span>
                 </button>
                 <button onclick="switchPage('agents-page')" class="nav-link">
                     <span class="corner-tl"></span><span class="corner-br"></span>
-                    <span class="label">AGENT_ROSTER</span>
+                    <span class="label">LISTA_DE_AGENTES</span>
                 </button>
             </nav>
 
             <div class="terminal-footer">
                 <div class="connection-status">
                     <div class="dot pulse"></div>
-                    <span>UPLINK_ESTABLISHED</span>
+                    <span>LINK_ESTABELECIDO</span>
                 </div>
-                <div class="encryption-key">RSA_4096: AES-256</div>
+                <div class="encryption-key">NÍVEL DE ACESSO: 07</div>
             </div>
         </aside>
 
         <main class="workspace">
             <div id="home-page" class="page active">
                 <header class="view-intro">
-                    <div class="view-tag">SYSTEM_OVERVIEW_V4.0</div>
-                    <h2 class="view-title">OPERATIONAL INTELLIGENCE</h2>
+                    <div class="view-tag">RESUMO_DO_SISTEMA_V4.0</div>
+                    <h2 class="view-title">INTELIGÊNCIA OPERACIONAL</h2>
                 </header>
 
                 <div class="stats-matrix">
                     <div class="stat-card-v2">
-                        <div class="card-bg-fx"></div>
                         <div class="stat-info">
-                            <label>TOTAL_OPS</label>
+                            <label>TOTAL_DE_MISSOES</label>
                             <span class="stat-value" id="count-missions">0</span>
                         </div>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 75%"></div></div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: 70%"></div></div>
                     </div>
                     <div class="stat-card-v2">
-                        <div class="card-bg-fx"></div>
                         <div class="stat-info">
-                            <label>DATA_BLOCKS</label>
+                            <label>BANCO_DE_DADOS</label>
                             <span class="stat-value" id="count-docs">0</span>
                         </div>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 45%"></div></div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: 40%"></div></div>
                     </div>
                     <div class="stat-card-v2">
-                        <div class="card-bg-fx"></div>
                         <div class="stat-info">
-                            <label>PERSONNEL</label>
+                            <label>AGENTES_EM_CAMPO</label>
                             <span class="stat-value" id="count-agents">0</span>
                         </div>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 92%"></div></div>
+                        <div class="stat-bar"><div class="stat-fill" style="width: 90%"></div></div>
                     </div>
                 </div>
             </div>
 
             <div id="missions-page" class="page">
                 <div class="page-header-v2">
-                    <h2>MISSION_CONTROL</h2>
-                    <button class="btn-tech-plus" onclick="openModal('mission-modal')">
-                        <span class="plus-icon">+</span> INJECT_NEW_DATA
-                    </button>
+                    <h2>CONTROLE_DE_MISSOES</h2>
+                    <button class="btn-tech-plus" onclick="openModal('mission-modal')">NOVA_ENTRADA</button>
                 </div>
                 <div id="missions-container" class="tech-grid"></div>
             </div>
 
             <div id="docs-page" class="page">
                 <div class="page-header-v2">
-                    <h2>SECURE_STORAGE</h2>
-                    <button class="btn-tech-plus" onclick="openModal('doc-modal')">ARCHIVE_DOC</button>
+                    <h2>DADOS_CONFIDENCIAIS</h2>
+                    <button class="btn-tech-plus" onclick="openModal('doc-modal')">ARQUIVAR_DOC</button>
                 </div>
                 <div id="docs-container" class="tech-grid"></div>
             </div>
 
             <div id="agents-page" class="page">
                 <div class="page-header-v2">
-                    <h2>AGENT_DATABASE</h2>
-                    <button class="btn-tech-plus" onclick="openModal('agent-modal')">RECRUIT_AGENT</button>
+                    <h2>REGISTRO_DE_PESSOAL</h2>
+                    <button class="btn-tech-plus" onclick="openModal('agent-modal')">RECRUTAR_AGENTE</button>
                 </div>
                 <div id="agents-container" class="tech-grid"></div>
             </div>
@@ -120,28 +115,53 @@
 
     <div id="mission-modal" class="modal-v2">
         <div class="modal-v2-container">
-            <div class="modal-v2-header">
-                <h3>// MISSION_DATA_INPUT</h3>
-                <button class="btn-close-v2" onclick="closeModal('mission-modal')">&times;</button>
+            <h3>// ENTRADA_DE_MISSAO</h3>
+            <div class="tech-input-group">
+                <input type="text" id="m-title" required placeholder=" ">
+                <label>CODINOME DA OPERAÇÃO</label>
             </div>
-            <div class="modal-v2-body">
-                <div class="tech-input-group">
-                    <input type="text" id="m-title" required placeholder=" ">
-                    <label>MISSION_CODENAME</label>
-                </div>
-                <div class="tech-input-group">
-                    <textarea id="m-desc" required placeholder=" "></textarea>
-                    <label>OBJECTIVE_SPECIFICATIONS</label>
-                </div>
-                <div class="tech-input-group">
-                    <select id="m-status">
-                        <option value="andamento">OPERATIONAL</option>
-                        <option value="concluida">SUCCESS</option>
-                        <option value="fracassada">FAILED</option>
-                    </select>
-                </div>
-                <button class="btn-submit-tech" onclick="saveMission()">UPLINK_TO_CLOUD</button>
+            <div class="tech-input-group">
+                <textarea id="m-desc" required placeholder=" "></textarea>
+                <label>ESPECIFICAÇÕES DOS OBJETIVOS</label>
             </div>
+            <select id="m-status" class="tech-select">
+                <option value="andamento">EM ANDAMENTO</option>
+                <option value="concluida">CONCLUÍDA</option>
+                <option value="fracassada">FRACASSADA</option>
+            </select>
+            <button class="btn-submit-tech" onclick="saveMission()">FAZER UPLOAD</button>
+            <button class="btn-close-text" onclick="closeModal('mission-modal')">CANCELAR</button>
+        </div>
+    </div>
+
+    <div id="doc-modal" class="modal-v2">
+        <div class="modal-v2-container">
+            <h3>// ARQUIVAR_DOCUMENTO</h3>
+            <div class="tech-input-group">
+                <input type="text" id="d-title" required placeholder=" ">
+                <label>TÍTULO DO ARQUIVO</label>
+            </div>
+            <div class="tech-input-group">
+                <textarea id="d-desc" required placeholder=" "></textarea>
+                <label>CONTEÚDO DO DOCUMENTO</label>
+            </div>
+            <button class="btn-submit-tech" onclick="saveDoc()">SALVAR NOS ARQUIVOS</button>
+            <button class="btn-close-text" onclick="closeModal('doc-modal')">CANCELAR</button>
+        </div>
+    </div>
+
+    <div id="agent-modal" class="modal-v2">
+        <div class="modal-v2-container">
+            <h3>// RECRUTAMENTO_AGENTE</h3>
+            <div class="tech-input-group">
+                <input type="text" id="a-name" required placeholder=" ">
+                <label>NOME COMPLETO DO AGENTE</label>
+            </div>
+            <div class="tech-input-group">
+                <input type="file" id="a-image" accept="image/*">
+            </div>
+            <button class="btn-submit-tech" onclick="saveAgent()">AUTORIZAR ACESSO</button>
+            <button class="btn-close-text" onclick="closeModal('agent-modal')">CANCELAR</button>
         </div>
     </div>
 
