@@ -3,128 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIELD - SISTEMA OPERACIONAL</title>
+    <title>SHIELD | Gestão de Inteligência</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="intro-overlay">
-        <div class="intro-box">
-            <div class="shield-logo-big"></div>
-            <h1>SISTEMA SHIELD</h1>
-            <p>AUTENTICANDO AGENTE...</p>
-        </div>
-    </div>
-
-    <div class="app-wrapper">
+    <div class="app-container">
         <aside class="sidebar">
-            <div class="sidebar-header">
-                <div class="shield-logo"></div>
-                <h2>SHIELD</h2>
-                <span>NÍVEL DE ACESSO 7</span>
+            <div class="sidebar-brand">
+                <div class="logo-symbol">S</div>
+                <div class="logo-text">SHIELD<span>OS</span></div>
             </div>
             
-            <nav class="side-nav">
-                <button onclick="switchPage('home-page')" class="nav-item">
-                    <i>⬢</i> HOME
-                </button>
-                <button onclick="switchPage('missions-page')" class="nav-item">
-                    <i>◈</i> MISSÕES
-                </button>
-                <button onclick="switchPage('docs-page')" class="nav-item">
-                    <i>💾</i> DOCUMENTOS
-                </button>
-                <button onclick="switchPage('agents-page')" class="nav-item">
-                    <i>👤</i> AGENTES
-                </button>
+            <nav class="nav-menu">
+                <button onclick="switchPage('home-page')" class="nav-btn active">Dashboard</button>
+                <button onclick="switchPage('missions-page')" class="nav-btn">Operações</button>
+                <button onclick="switchPage('docs-page')" class="nav-btn">Arquivos</button>
+                <button onclick="switchPage('agents-page')" class="nav-btn">Agentes</button>
             </nav>
+
+            <div class="user-status">
+                <div class="status-indicator"></div>
+                <span>Agente Autenticado</span>
+            </div>
         </aside>
 
         <main class="main-content">
-            
             <div id="home-page" class="page active">
-                <h2 class="section-title">ESTATÍSTICAS DA UNIDADE</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h4>MISSÕES REGISTRADAS</h4>
-                        <p id="count-missions">0</p>
+                <header class="content-header">
+                    <h1>Visão Geral</h1>
+                    <p>Relatório de status em tempo real das unidades SHIELD.</p>
+                </header>
+                
+                <div class="stats-row">
+                    <div class="glass-card stat">
+                        <small>Missões Ativas</small>
+                        <h2 id="count-missions">0</h2>
                     </div>
-                    <div class="stat-card">
-                        <h4>ARQUIVOS DE DADOS</h4>
-                        <p id="count-docs">0</p>
+                    <div class="glass-card stat">
+                        <small>Documentos Protegidos</small>
+                        <h2 id="count-docs">0</h2>
                     </div>
-                    <div class="stat-card">
-                        <h4>AGENTES EM CAMPO</h4>
-                        <p id="count-agents">0</p>
+                    <div class="glass-card stat">
+                        <small>Agentes Registrados</small>
+                        <h2 id="count-agents">0</h2>
                     </div>
                 </div>
             </div>
 
             <div id="missions-page" class="page">
-                <div class="page-header">
-                    <h2>PAINEL DE MISSÕES</h2>
-                    <button class="btn-main" onclick="openModal('mission-modal')">+ NOVA MISSÃO</button>
-                </div>
-                <div id="missions-container" class="grid-container"></div>
+                <header class="content-header">
+                    <h1>Operações</h1>
+                    <button class="btn-primary" onclick="openModal('mission-modal')">+ Nova Missão</button>
+                </header>
+                <div id="missions-container" class="data-grid"></div>
             </div>
 
             <div id="docs-page" class="page">
-                <div class="page-header">
-                    <h2>DATABASE CONFIDENCIAL</h2>
-                    <button class="btn-main" onclick="openModal('doc-modal')">+ ARQUIVAR DOC</button>
-                </div>
-                <div id="docs-container" class="grid-container"></div>
+                <header class="content-header">
+                    <h1>Arquivos Confidenciais</h1>
+                    <button class="btn-primary" onclick="openModal('doc-modal')">+ Novo Documento</button>
+                </header>
+                <div id="docs-container" class="data-grid"></div>
             </div>
 
             <div id="agents-page" class="page">
-                <div class="page-header">
-                    <h2>REGISTRO DE AGENTES</h2>
-                    <button class="btn-main" onclick="openModal('agent-modal')">+ ADMITIR AGENTE</button>
-                </div>
-                <div id="agents-container" class="grid-container"></div>
+                <header class="content-header">
+                    <h1>Agentes</h1>
+                    <button class="btn-primary" onclick="openModal('agent-modal')">+ Admitir Agente</button>
+                </header>
+                <div id="agents-container" class="data-grid"></div>
             </div>
-
         </main>
     </div>
 
     <div id="mission-modal" class="modal">
-        <div class="modal-content">
-            <h3>NOVA OPERAÇÃO</h3>
-            <input type="text" id="m-title" placeholder="Codinome da Missão">
-            <textarea id="m-desc" placeholder="Detalhes da Operação"></textarea>
+        <div class="modal-box">
+            <h3>Nova Missão</h3>
+            <input type="text" id="m-title" placeholder="Nome da Operação">
+            <textarea id="m-desc" placeholder="Resumo executivo"></textarea>
             <select id="m-status">
-                <option value="andamento">EM ANDAMENTO</option>
-                <option value="concluida">CONCLUÍDA</option>
-                <option value="fracassada">FRACASSADA</option>
+                <option value="andamento">Em Andamento</option>
+                <option value="concluida">Concluída</option>
+                <option value="fracassada">Fracassada</option>
             </select>
-            <button class="btn-main" onclick="saveMission()">REGISTRAR</button>
-            <button class="btn-close" onclick="closeModal('mission-modal')">FECHAR</button>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeModal('mission-modal')">Cancelar</button>
+                <button class="btn-primary" onclick="saveMission()">Criar Registro</button>
+            </div>
         </div>
     </div>
-
-    <div id="doc-modal" class="modal">
-        <div class="modal-content">
-            <h3>ARQUIVAR DADOS</h3>
-            <input type="text" id="d-title" placeholder="Assunto do Documento">
-            <textarea id="d-desc" placeholder="Conteúdo criptografado"></textarea>
-            <button class="btn-main" onclick="saveDoc()">SALVAR</button>
-            <button class="btn-close" onclick="closeModal('doc-modal')">FECHAR</button>
-        </div>
-    </div>
-
-    <div id="agent-modal" class="modal">
-        <div class="modal-content">
-            <h3>ADMISSÃO DE AGENTE</h3>
-            <input type="text" id="a-name" placeholder="Nome Completo">
-            <input type="file" id="a-image" accept="image/*">
-            <button class="btn-main" onclick="saveAgent()">AUTORIZAR</button>
-            <button class="btn-close" onclick="closeModal('agent-modal')">FECHAR</button>
-        </div>
-    </div>
-
+    
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
-
 </body>
 </html>
