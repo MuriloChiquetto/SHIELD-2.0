@@ -18,30 +18,25 @@
                 <div class="logo-spinner">
                     <div class="ring"></div>
                     <div class="ring"></div>
-                    <div class="ring"></div>
                     <span class="shield-char">S</span>
                 </div>
                 <div class="logo-brand">
-                    <h1 class="glitch-text" data-text="SHIELD">SHIELD</h1>
+                    <h1>SHIELD</h1>
                     <div class="system-tag">DIVISÃO DE INTERVENÇÃO ESTRATÉGICA</div>
                 </div>
             </div>
 
             <nav class="nav-controller">
                 <button onclick="switchPage('home-page')" class="nav-link active">
-                    <span class="corner-tl"></span><span class="corner-br"></span>
                     <span class="label">PAINEL_CENTRAL</span>
                 </button>
                 <button onclick="switchPage('missions-page')" class="nav-link">
-                    <span class="corner-tl"></span><span class="corner-br"></span>
-                    <span class="label">OPERACOES_ATIVAS</span>
+                    <span class="label">OPERAÇÕES_ATIVAS</span>
                 </button>
                 <button onclick="switchPage('docs-page')" class="nav-link">
-                    <span class="corner-tl"></span><span class="corner-br"></span>
-                    <span class="label">ARQUIVOS_CRIPTOGRAFADOS</span>
+                    <span class="label">ARQUIVOS_CONFIDENCIAIS</span>
                 </button>
                 <button onclick="switchPage('agents-page')" class="nav-link">
-                    <span class="corner-tl"></span><span class="corner-br"></span>
                     <span class="label">LISTA_DE_AGENTES</span>
                 </button>
             </nav>
@@ -51,7 +46,6 @@
                     <div class="dot pulse"></div>
                     <span>LINK_ESTABELECIDO</span>
                 </div>
-                <div class="encryption-key">NÍVEL DE ACESSO: 07</div>
             </div>
         </aside>
 
@@ -64,32 +58,23 @@
 
                 <div class="stats-matrix">
                     <div class="stat-card-v2">
-                        <div class="stat-info">
-                            <label>TOTAL_DE_MISSOES</label>
-                            <span class="stat-value" id="count-missions">0</span>
-                        </div>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 70%"></div></div>
+                        <label>TOTAL_DE_MISSÕES</label>
+                        <span class="stat-value" id="count-missions">0</span>
                     </div>
                     <div class="stat-card-v2">
-                        <div class="stat-info">
-                            <label>BANCO_DE_DADOS</label>
-                            <span class="stat-value" id="count-docs">0</span>
-                        </div>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 40%"></div></div>
+                        <label>BANCO_DE_DADOS</label>
+                        <span class="stat-value" id="count-docs">0</span>
                     </div>
                     <div class="stat-card-v2">
-                        <div class="stat-info">
-                            <label>AGENTES_EM_CAMPO</label>
-                            <span class="stat-value" id="count-agents">0</span>
-                        </div>
-                        <div class="stat-bar"><div class="stat-fill" style="width: 90%"></div></div>
+                        <label>AGENTES_EM_CAMPO</label>
+                        <span class="stat-value" id="count-agents">0</span>
                     </div>
                 </div>
             </div>
 
             <div id="missions-page" class="page">
                 <div class="page-header-v2">
-                    <h2>CONTROLE_DE_MISSOES</h2>
+                    <h2>CONTROLE_DE_MISSÕES</h2>
                     <button class="btn-tech-plus" onclick="openModal('mission-modal')">NOVA_ENTRADA</button>
                 </div>
                 <div id="missions-container" class="tech-grid"></div>
@@ -97,7 +82,7 @@
 
             <div id="docs-page" class="page">
                 <div class="page-header-v2">
-                    <h2>DADOS_CONFIDENCIAIS</h2>
+                    <h2>DADOS_CRIPTOGRAFADOS</h2>
                     <button class="btn-tech-plus" onclick="openModal('doc-modal')">ARQUIVAR_DOC</button>
                 </div>
                 <div id="docs-container" class="tech-grid"></div>
@@ -115,53 +100,55 @@
 
     <div id="mission-modal" class="modal-v2">
         <div class="modal-v2-container">
-            <h3>// ENTRADA_DE_MISSAO</h3>
+            <h3>// ENTRADA_DE_MISSÃO</h3>
             <div class="tech-input-group">
                 <input type="text" id="m-title" required placeholder=" ">
                 <label>CODINOME DA OPERAÇÃO</label>
             </div>
             <div class="tech-input-group">
                 <textarea id="m-desc" required placeholder=" "></textarea>
-                <label>ESPECIFICAÇÕES DOS OBJETIVOS</label>
+                <label>OBJETIVOS TÉCNICOS</label>
             </div>
-            <select id="m-status" class="tech-select">
-                <option value="andamento">EM ANDAMENTO</option>
-                <option value="concluida">CONCLUÍDA</option>
-                <option value="fracassada">FRACASSADA</option>
-            </select>
-            <button class="btn-submit-tech" onclick="saveMission()">FAZER UPLOAD</button>
+            <div class="tech-input-group">
+                <select id="m-status" class="tech-select-custom">
+                    <option value="andamento">EM ANDAMENTO</option>
+                    <option value="concluida">CONCLUÍDA</option>
+                    <option value="fracassada">FRACASSADA</option>
+                </select>
+            </div>
+            <button class="btn-submit-tech" onclick="saveMission()">INICIAR UPLOAD</button>
             <button class="btn-close-text" onclick="closeModal('mission-modal')">CANCELAR</button>
         </div>
     </div>
 
     <div id="doc-modal" class="modal-v2">
         <div class="modal-v2-container">
-            <h3>// ARQUIVAR_DOCUMENTO</h3>
+            <h3>// NOVO_ARQUIVO</h3>
             <div class="tech-input-group">
                 <input type="text" id="d-title" required placeholder=" ">
-                <label>TÍTULO DO ARQUIVO</label>
+                <label>TÍTULO DO DOCUMENTO</label>
             </div>
             <div class="tech-input-group">
                 <textarea id="d-desc" required placeholder=" "></textarea>
-                <label>CONTEÚDO DO DOCUMENTO</label>
+                <label>CONTEÚDO SENSÍVEL</label>
             </div>
-            <button class="btn-submit-tech" onclick="saveDoc()">SALVAR NOS ARQUIVOS</button>
+            <button class="btn-submit-tech" onclick="saveDoc()">ARQUIVAR</button>
             <button class="btn-close-text" onclick="closeModal('doc-modal')">CANCELAR</button>
         </div>
     </div>
 
     <div id="agent-modal" class="modal-v2">
         <div class="modal-v2-container">
-            <h3>// RECRUTAMENTO_AGENTE</h3>
+            <h3>// RECRUTAMENTO</h3>
             <div class="tech-input-group">
                 <input type="text" id="a-name" required placeholder=" ">
-                <label>NOME COMPLETO DO AGENTE</label>
+                <label>NOME DO AGENTE</label>
             </div>
             <div class="tech-input-group">
-                <input type="file" id="a-image" accept="image/*">
+                <input type="file" id="a-image" accept="image/*" class="file-input">
             </div>
-            <button class="btn-submit-tech" onclick="saveAgent()">AUTORIZAR ACESSO</button>
-            <button class="btn-close-text" onclick="closeModal('agent-modal')">CANCELAR</button>
+            <button class="btn-submit-tech" onclick="saveAgent()">AUTORIZAR</button>
+            <button class="btn-close-text" onclick="closeModal('agent-modal')">FECHAR</button>
         </div>
     </div>
 
