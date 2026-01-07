@@ -3,98 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHIELD | Gestão de Inteligência</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>SHIELD | Advanced Intelligence Interface</title>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="bg-scanlines"></div>
 
-    <div class="app-container">
-        <aside class="sidebar">
-            <div class="sidebar-brand">
-                <div class="logo-symbol">S</div>
-                <div class="logo-text">SHIELD<span>OS</span></div>
+    <div class="dashboard-shell">
+        <aside class="glass-sidebar">
+            <div class="brand-zone">
+                <div class="shield-hexagon">
+                    <span>S</span>
+                </div>
+                <h2 class="glitch" data-text="SHIELD">SHIELD</h2>
             </div>
             
-            <nav class="nav-menu">
-                <button onclick="switchPage('home-page')" class="nav-btn active">Dashboard</button>
-                <button onclick="switchPage('missions-page')" class="nav-btn">Operações</button>
-                <button onclick="switchPage('docs-page')" class="nav-btn">Arquivos</button>
-                <button onclick="switchPage('agents-page')" class="nav-btn">Agentes</button>
+            <nav class="hyper-nav">
+                <div class="nav-indicator"></div>
+                <button onclick="switchPage('home-page')" class="nav-item active" data-index="0">
+                    <span class="nav-hex"></span> DASHBOARD
+                </button>
+                <button onclick="switchPage('missions-page')" class="nav-item" data-index="1">
+                    <span class="nav-hex"></span> MISSÕES
+                </button>
+                <button onclick="switchPage('docs-page')" class="nav-item" data-index="2">
+                    <span class="nav-hex"></span> ARQUIVOS
+                </button>
+                <button onclick="switchPage('agents-page')" class="nav-item" data-index="3">
+                    <span class="nav-hex"></span> AGENTES
+                </button>
             </nav>
 
-            <div class="user-status">
-                <div class="status-indicator"></div>
-                <span>Agente Autenticado</span>
+            <div class="system-monitor">
+                <div class="cpu-load">
+                    <div class="load-bar"></div>
+                </div>
+                <small>SYSTEM UPTIME: 99.9%</small>
             </div>
         </aside>
 
-        <main class="main-content">
+        <main class="viewport">
             <div id="home-page" class="page active">
-                <header class="content-header">
-                    <h1>Visão Geral</h1>
-                    <p>Relatório de status em tempo real das unidades SHIELD.</p>
-                </header>
+                <div class="view-header">
+                    <h1>SISTEMA DE MONITORAMENTO <span class="pulse">●</span></h1>
+                    <div class="data-clock" id="live-clock">00:00:00</div>
+                </div>
                 
-                <div class="stats-row">
-                    <div class="glass-card stat">
-                        <small>Missões Ativas</small>
+                <div class="hero-stats">
+                    <div class="data-card animate-in">
+                        <div class="card-glow"></div>
+                        <label>OPERATIONS</label>
                         <h2 id="count-missions">0</h2>
+                        <div class="card-line"></div>
                     </div>
-                    <div class="glass-card stat">
-                        <small>Documentos Protegidos</small>
+                    <div class="data-card animate-in" style="animation-delay: 0.1s">
+                        <div class="card-glow"></div>
+                        <label>DATABASE</label>
                         <h2 id="count-docs">0</h2>
+                        <div class="card-line"></div>
                     </div>
-                    <div class="glass-card stat">
-                        <small>Agentes Registrados</small>
+                    <div class="data-card animate-in" style="animation-delay: 0.2s">
+                        <div class="card-glow"></div>
+                        <label>PERSONNEL</label>
                         <h2 id="count-agents">0</h2>
+                        <div class="card-line"></div>
                     </div>
                 </div>
             </div>
 
             <div id="missions-page" class="page">
-                <header class="content-header">
-                    <h1>Operações</h1>
-                    <button class="btn-primary" onclick="openModal('mission-modal')">+ Nova Missão</button>
-                </header>
-                <div id="missions-container" class="data-grid"></div>
+                <div class="view-header">
+                    <h1>CENTRAL DE OPERAÇÕES</h1>
+                    <button class="btn-neo" onclick="openModal('mission-modal')">NEW_ENTRY_</button>
+                </div>
+                <div id="missions-container" class="complex-grid"></div>
             </div>
 
-            <div id="docs-page" class="page">
-                <header class="content-header">
-                    <h1>Arquivos Confidenciais</h1>
-                    <button class="btn-primary" onclick="openModal('doc-modal')">+ Novo Documento</button>
-                </header>
-                <div id="docs-container" class="data-grid"></div>
-            </div>
-
-            <div id="agents-page" class="page">
-                <header class="content-header">
-                    <h1>Agentes</h1>
-                    <button class="btn-primary" onclick="openModal('agent-modal')">+ Admitir Agente</button>
-                </header>
-                <div id="agents-container" class="data-grid"></div>
-            </div>
+            <div id="docs-page" class="page"><div id="docs-container" class="complex-grid"></div></div>
+            <div id="agents-page" class="page"><div id="agents-container" class="complex-grid"></div></div>
         </main>
     </div>
 
-    <div id="mission-modal" class="modal">
-        <div class="modal-box">
-            <h3>Nova Missão</h3>
-            <input type="text" id="m-title" placeholder="Nome da Operação">
-            <textarea id="m-desc" placeholder="Resumo executivo"></textarea>
-            <select id="m-status">
-                <option value="andamento">Em Andamento</option>
-                <option value="concluida">Concluída</option>
-                <option value="fracassada">Fracassada</option>
-            </select>
-            <div class="modal-footer">
-                <button class="btn-secondary" onclick="closeModal('mission-modal')">Cancelar</button>
-                <button class="btn-primary" onclick="saveMission()">Criar Registro</button>
+    <div id="mission-modal" class="modal-overlay">
+        <div class="modal-glass">
+            <div class="modal-header">
+                <h3>REGISTRAR NOVA MISSÃO</h3>
+                <span class="close-btn" onclick="closeModal('mission-modal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <input type="text" id="m-title" required>
+                    <label>CODINOME DA MISSÃO</label>
+                </div>
+                <div class="input-group">
+                    <textarea id="m-desc" required></textarea>
+                    <label>DETALHES TÉCNICOS</label>
+                </div>
+                <select id="m-status" class="neo-select">
+                    <option value="andamento">OPERANTE</option>
+                    <option value="concluida">SUCESSO</option>
+                    <option value="fracassada">FALHA</option>
+                </select>
+                <button class="btn-confirm" onclick="saveMission()">ENVIAR PARA O MAINFRAME</button>
             </div>
         </div>
     </div>
-    
+
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="script.js"></script>
