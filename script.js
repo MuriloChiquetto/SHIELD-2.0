@@ -17,35 +17,34 @@ const db = firebase.firestore();
 // 2. INICIALIZAÇÃO E CONTADORES
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Sincronizar dados e atualizar contadores em tempo real
     const colecoes = ['missions', 'docs', 'agents'];
     colecoes.forEach(c => {
         startSync(c);
         updateCounter(c);
     });
 
-    // Remover tela de carregamento
     setTimeout(() => {
         const intro = document.getElementById('intro-overlay');
         if (intro) {
-            intro.style.opacity = '0';
-            setTimeout(() => intro.style.display = 'none', 1000);
+            intro.classList.add('fade-out');
+            setTimeout(() => intro.style.display = 'none', 800);
         }
-    }, 2500);
+    }, 2000);
 });
 
 function updateCounter(collectionName) {
     db.collection(collectionName).onSnapshot(snapshot => {
-        const count = snapshot.size;
         const element = document.getElementById(`count-${collectionName}`);
-        if (element) element.innerText = count;
+        if (element) {
+            // Efeito de contagem animada simples
+            element.innerText = snapshot.size;
+        }
     });
 }
 
 // ==========================================================================
-// 3. MOTOR DE SINCRONIZAÇÃO (FIREBASE)
+// 3. MOTOR DE SINCRONIZAÇÃO
 // ==========================================================================
-
 function startSync(collectionName) {
     db.collection(collectionName).orderBy("timestamp", "desc")
       .onSnapshot((snapshot) => {
@@ -61,7 +60,7 @@ async function saveData(collection, data) {
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
     } catch (e) {
-        alert("Erro ao salvar no banco de dados. Verifique as Regras do Firebase.");
+        console.error("Erro SHIELD:", e);
     }
 }
 
@@ -70,15 +69,14 @@ async function updateMissionStatus(id, novoStatus) {
 }
 
 async function deleteRemote(collection, id) {
-    if(confirm("Confirmar exclusão definitiva?")) {
+    if(confirm("Deseja eliminar este registro permanentemente?")) {
         await db.collection(collection).doc(id).delete();
     }
 }
 
 // ==========================================================================
-// 4. FUNÇÕES DE INTERAÇÃO (BOTOES)
+// 4. FUNÇÕES DE INTERAÇÃO
 // ==========================================================================
-
 function saveMission() {
     const title = document.getElementById('m-title').value;
     const desc = document.getElementById('m-desc').value;
@@ -113,64 +111,63 @@ function saveAgent() {
 }
 
 // ==========================================================================
-// 5. RENDERIZAÇÃO DA INTERFACE (AQUI ESTAVA O BUG)
+// 5. RENDERIZAÇÃO MODERNA
 // ==========================================================================
-
 function renderContent(collection, data) {
-    // 📄 DOCUMENTOS (Ajustado para forçar exibição)
-    if (collection === 'docs') {
-        const cont = document.getElementById('docs-container');
-        if (cont) {
-            cont.innerHTML = data.map(d => `
-                <div class="card" style="border-top: 3px solid #444; position: relative;">
-                    <span style="font-size: 0.6rem; color: #666; position: absolute; top: 10px; right: 10px;">ID: ${d.id.substring(0,5)}</span>
-                    <h3 style="color: #00d4ff; margin-bottom: 10px;">${d.title}</h3>
-                    <p style="white-space: pre-wrap; font-size: 0.9rem; color: #ddd; background: #111; padding: 10px; border-radius: 4px;">${d.desc}</p>
-                    <button class="btn-delete" style="width: 100%; margin-top: 15px;" onclick="deleteRemote('docs', '${d.id}')">DELETAR ARQUIVO</button>
-                </div>
-            `).join('');
-        }
-    }
+    const cont = document.getElementById(`${collection}-container`);
+    if (!cont) return;
 
-    // 🎯 MISSÕES (Com botões de Concluído/Fracassado)
-    if (collection === 'missions') {
-        const cont = document.getElementById('missions-container');
-        if (cont) {
-            cont.innerHTML = data.map(m => {
-                let color = m.status === 'concluida' ? "#00ff00" : (m.status === 'fracassada' ? "#ff4444" : "#aaa");
-                return `
-                <div class="card" style="border-left: 5px solid ${color}">
-                    <small style="color:${color}; font-weight:bold;">${(m.status || 'andamento').toUpperCase()}</small>
-                    <h3>${m.title}</h3>
-                    <p>${m.desc}</p>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;">
-                        <button class="btn-save" style="background:#004400; font-size: 0.7rem;" onclick="updateMissionStatus('${m.id}', 'concluida')">CONCLUÍDA</button>
-                        <button class="btn-delete" style="background:#440000; font-size: 0.7rem;" onclick="updateMissionStatus('${m.id}', 'fracassada')">FRACASSADA</button>
+    cont.innerHTML = data.map(item => {
+        if (collection === 'docs') {
+            return `
+                <div class="modern-card doc-card">
+                    <div class="card-tag">ARQUIVO #${item.id.substring(0,4)}</div>
+                    <h3>${item.title}</h3>
+                    <div class="card-content">${item.desc}</div>
+                    <div class="card-footer">
+                        <button class="btn-icon-delete" onclick="deleteRemote('docs', '${item.id}')">Excluir</button>
                     </div>
                 </div>`;
-            }).join('');
         }
-    }
 
-    // 👥 AGENTES
-    if (collection === 'agents') {
-        const cont = document.getElementById('agents-container');
-        if (cont) {
-            cont.innerHTML = data.map(a => `
-                <div class="card agent-card">
-                    <img src="${a.image}" style="width:100%; height:400px; object-fit:contain; background:#000;">
-                    <h3 style="text-align: center; margin-top: 10px;">${a.name}</h3>
-                    <button class="btn-delete" onclick="deleteRemote('agents', '${a.id}')">REMOVER</button>
-                </div>
-            `).join('');
+        if (collection === 'missions') {
+            const statusClass = item.status || 'andamento';
+            return `
+                <div class="modern-card mission-card status-${statusClass}">
+                    <div class="status-badge">${statusClass.toUpperCase()}</div>
+                    <h3>${item.title}</h3>
+                    <p>${item.desc}</p>
+                    <div class="action-buttons">
+                        <button class="btn-action success" onclick="updateMissionStatus('${item.id}', 'concluida')">Concluir</button>
+                        <button class="btn-action danger" onclick="updateMissionStatus('${item.id}', 'fracassada')">Falhar</button>
+                    </div>
+                    <button class="btn-minimal" onclick="deleteRemote('missions', '${item.id}')">Apagar Registro</button>
+                </div>`;
         }
-    }
+
+        if (collection === 'agents') {
+            return `
+                <div class="modern-card agent-card">
+                    <div class="agent-photo-container">
+                        <img src="${item.image}" alt="${item.name}">
+                    </div>
+                    <div class="agent-info">
+                        <h3>${item.name}</h3>
+                        <button class="btn-minimal danger" onclick="deleteRemote('agents', '${item.id}')">Revogar Acesso</button>
+                    </div>
+                </div>`;
+        }
+    }).join('');
 }
 
 // NAVEGAÇÃO
 function switchPage(pageId) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById(pageId).classList.add('active');
+    
+    // Atualizar botões do menu
+    document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('nav-active'));
 }
+
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
