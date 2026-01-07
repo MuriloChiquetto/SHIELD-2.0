@@ -1,6 +1,6 @@
 /* --- ROOT & RESET --- */
 :root {
-    --primary: #00e5ff;
+    --primary: #ffffff;
     --primary-dim: rgba(0, 229, 255, 0.2);
     --danger: #ff0055;
     --success: #00ffaa;
@@ -173,3 +173,4 @@ body {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: #05080f; }
 ::-webkit-scrollbar-thumb { background: var(--primary); }
+
