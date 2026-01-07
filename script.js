@@ -1,8 +1,3 @@
-/** * SHIELD OS - MAIN ENGINE
- * VERSION: 4.0.2
- * DATABASE: FIREBASE FIRESTORE
- */
-
 const firebaseConfig = {
     apiKey: "AIzaSyCXb4TRE4HcIRjqv5DqvYIr0jxgEuvnhPw",
     authDomain: "sistema-shield.firebaseapp.com",
@@ -12,125 +7,113 @@ const firebaseConfig = {
     appId: "1:1041018025450:web:a03a48413628a5f3e96e93"
 };
 
-// Initialize Security Layers
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// ---------------------------------------------------------
-// CORE INITIALIZATION
-// ---------------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
-    console.log("SHIELD ENGINE: ONLINE");
-    
-    const modules = ['missions', 'docs', 'agents'];
-    modules.forEach(mod => {
-        initSyncStream(mod);
-        syncCounters(mod);
+    ['missions', 'docs', 'agents'].forEach(col => {
+        startSync(col);
+        updateCounter(col);
     });
-
-    // Boot Sequence
-    setTimeout(() => {
-        document.querySelector('.ambient-glow').style.opacity = '1';
-    }, 1000);
 });
 
-// ---------------------------------------------------------
-// DATA STREAMS (FIREBASE)
-// ---------------------------------------------------------
-function initSyncStream(collection) {
-    db.collection(collection).orderBy("timestamp", "desc")
-      .onSnapshot((snapshot) => {
-          const data = snapshot.docs.map(doc => ({ 
-              id: doc.id, 
-              ...doc.data() 
-          }));
-          renderInterface(collection, data);
-      });
-}
-
-function syncCounters(collection) {
-    db.collection(collection).onSnapshot(snapshot => {
-        const el = document.getElementById(`count-${collection}`);
-        if (el) animateNumber(el, snapshot.size);
+function updateCounter(col) {
+    db.collection(col).onSnapshot(snap => {
+        const el = document.getElementById(`count-${col}`);
+        if (el) el.innerText = snap.size;
     });
 }
 
-function animateNumber(element, target) {
-    let current = parseInt(element.innerText) || 0;
-    const step = target > current ? 1 : -1;
-    if (current === target) return;
-
-    const timer = setInterval(() => {
-        current += step;
-        element.innerText = current;
-        if (current === target) clearInterval(timer);
-    }, 50);
+function startSync(col) {
+    db.collection(col).orderBy("timestamp", "desc").onSnapshot(snap => {
+        const data = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderInterface(col, data);
+    });
 }
 
-// ---------------------------------------------------------
-// INTERFACE ENGINE
-// ---------------------------------------------------------
-function renderInterface(collection, data) {
-    const container = document.getElementById(`${collection}-container`);
-    if (!container) return;
-
-    container.innerHTML = data.map(item => {
-        if (collection === 'missions') {
-            const statusColor = item.status === 'concluida' ? '#00ffaa' : (item.status === 'fracassada' ? '#ff0055' : '#00e5ff');
-            return `
-            <div class="card-v2">
-                <div style="font-family: Orbitron; font-size: 8px; color: ${statusColor}; margin-bottom: 10px;">
-                    // STATUS: ${item.status.toUpperCase()}
-                </div>
-                <h3 style="margin-bottom: 10px; font-weight: 500;">${item.title}</h3>
-                <p style="font-size: 13px; color: #888; margin-bottom: 20px; line-height: 1.6;">${item.desc}</p>
-                <div style="display: flex; gap: 10px;">
-                    <button class="nav-link" style="height: 35px; width: 100px; padding: 0; justify-content: center; background: rgba(0,255,170,0.1); color: #00ffaa;" 
-                        onclick="updateStatus('${item.id}', 'concluida')">CLEAR</button>
-                    <button class="nav-link" style="height: 35px; width: 100px; padding: 0; justify-content: center; background: rgba(255,0,85,0.1); color: #ff0055;" 
-                        onclick="updateStatus('${item.id}', 'fracassada')">ABORT</button>
-                    <button onclick="deleteRecord('${collection}', '${item.id}')" style="background: none; border: none; color: #333; cursor: pointer; margin-left: auto;">[X]</button>
-                </div>
-            </div>`;
-        }
-        
-        if (collection === 'docs') {
-            return `
-            <div class="card-v2">
-                <div class="logo-spinner" style="width: 30px; height: 30px; margin-bottom: 10px;">
-                    <div class="ring" style="border-width: 1px;"></div>
-                </div>
-                <h3 style="color: var(--primary);">${item.title}</h3>
-                <p style="font-size: 12px; margin: 10px 0;">${item.desc}</p>
-                <button onclick="deleteRecord('docs', '${item.id}')" style="color: var(--danger); background: none; border: none; font-size: 10px; cursor: pointer;">DELETE_FILE</button>
-            </div>`;
-        }
-
-        if (collection === 'agents') {
-            return `
-            <div class="card-v2" style="text-align: center;">
-                <img src="${item.image}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); margin-bottom: 15px; filter: grayscale(1);">
-                <h3 style="font-family: Orbitron; font-size: 14px;">${item.name}</h3>
-                <button onclick="deleteRecord('agents', '${item.id}')" style="margin-top: 15px; background: none; border: 1px solid #222; color: #555; padding: 5px 15px; font-size: 9px; cursor: pointer;">REVOKE_ACCESS</button>
-            </div>`;
-        }
-    }).join('');
-}
-
-// ---------------------------------------------------------
-// ACTIONS & COMMANDS
-// ---------------------------------------------------------
+// SALVAR MISSÃO
 async function saveMission() {
     const title = document.getElementById('m-title').value;
     const desc = document.getElementById('m-desc').value;
     const status = document.getElementById('m-status').value;
-    if (!title) return;
+    if (!title) return alert("Título obrigatório");
 
     await db.collection('missions').add({
         title, desc, status,
         timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
     closeModal('mission-modal');
+    document.getElementById('m-title').value = '';
+    document.getElementById('m-desc').value = '';
+}
+
+// SALVAR DOCUMENTO
+async function saveDoc() {
+    const title = document.getElementById('d-title').value;
+    const desc = document.getElementById('d-desc').value;
+    if (!title) return alert("Título obrigatório");
+
+    await db.collection('docs').add({
+        title, desc,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    closeModal('doc-modal');
+    document.getElementById('d-title').value = '';
+    document.getElementById('d-desc').value = '';
+}
+
+// SALVAR AGENTE
+async function saveAgent() {
+    const name = document.getElementById('a-name').value;
+    const file = document.getElementById('a-image').files[0];
+    if (!name || !file) return alert("Preencha nome e imagem");
+
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+        await db.collection('agents').add({
+            name,
+            image: reader.result,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        closeModal('agent-modal');
+    };
+    reader.readAsDataURL(file);
+}
+
+function renderInterface(col, data) {
+    const cont = document.getElementById(`${col}-container`);
+    if (!cont) return;
+
+    cont.innerHTML = data.map(item => {
+        if (col === 'missions') {
+            const corStatus = item.status === 'concluida' ? '#fff' : (item.status === 'fracassada' ? '#ff4d4d' : '#666');
+            return `
+            <div class="card-v2" style="border-left: 3px solid ${corStatus}">
+                <small style="color:${corStatus}; font-family:Orbitron; font-size:9px;">// ${item.status.toUpperCase()}</small>
+                <h3 style="margin:10px 0;">${item.title}</h3>
+                <p style="font-size:13px; color:#666; margin-bottom:20px;">${item.desc}</p>
+                <div style="display:flex; gap:10px;">
+                    <button onclick="updateStatus('${item.id}', 'concluida')" class="btn-submit-tech" style="padding:5px 10px; background:#222; color:#fff;">CONCLUIR</button>
+                    <button onclick="updateStatus('${item.id}', 'fracassada')" class="btn-submit-tech" style="padding:5px 10px; background:#222; color:#ff4d4d;">FRACASSAR</button>
+                    <button onclick="deleteRecord('missions', '${item.id}')" style="background:none; border:none; color:#333; cursor:pointer; margin-left:auto;">[X]</button>
+                </div>
+            </div>`;
+        }
+        if (col === 'docs') {
+            return `<div class="card-v2">
+                <h4 style="color:#fff; font-family:Orbitron;">${item.title}</h4>
+                <p style="font-size:12px; color:#555; margin-top:10px;">${item.desc}</p>
+                <button onclick="deleteRecord('docs', '${item.id}')" style="background:none; border:none; color:#ff4d4d; font-size:9px; margin-top:15px; cursor:pointer;">DELETAR_ARQUIVO</button>
+            </div>`;
+        }
+        if (col === 'agents') {
+            return `<div class="card-v2" style="text-align:center;">
+                <img src="${item.image}" style="width:80px; height:80px; border-radius:50%; object-fit:cover; filter:grayscale(1); border:1px solid #333; margin-bottom:15px;">
+                <h4 style="font-family:Orbitron; font-size:12px;">${item.name}</h4>
+                <button onclick="deleteRecord('agents', '${item.id}')" style="background:none; border:none; color:#333; font-size:9px; margin-top:10px; cursor:pointer;">REVOGAR_ACESSO</button>
+            </div>`;
+        }
+    }).join('');
 }
 
 async function updateStatus(id, status) {
@@ -138,15 +121,13 @@ async function updateStatus(id, status) {
 }
 
 async function deleteRecord(coll, id) {
-    if(confirm("PERMANENT DELETE?")) await db.collection(coll).doc(id).delete();
+    if(confirm("EXCLUIR DEFINITIVAMENTE?")) await db.collection(coll).doc(id).delete();
 }
 
-// NAVIGATION ENGINE
-function switchPage(pageId) {
+function switchPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-    
-    document.getElementById(pageId).classList.add('active');
+    document.getElementById(id).classList.add('active');
     event.currentTarget.classList.add('active');
 }
 
